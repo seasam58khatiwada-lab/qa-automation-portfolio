@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
-BASE_URL = "https://www.saucedemo.com"
+from pages.login_page import LoginPage
 
 INVALID_LOGINS = [
     ("standard_user", "wrong_password", "do not match"),
@@ -12,24 +12,19 @@ INVALID_LOGINS = [
 
 
 def test_valid_login(page: Page):
-    username = "standard_user"
-    password = "secret_sauce"
+    login_page = LoginPage(page)
 
-    page.goto(BASE_URL)
-    page.get_by_placeholder("Username").fill(username)
-    page.get_by_placeholder("Password").fill(password)
-    page.get_by_role("button", name="Login").click()
+    login_page.open()
+    login_page.login("standard_user", "secret_sauce")
 
-    expect(page).to_have_url(BASE_URL + "/inventory.html")
+    expect(page).to_have_url(LoginPage.URL + "/inventory.html")
 
 
 @pytest.mark.parametrize("username, password, expected_error", INVALID_LOGINS)
 def test_invalid_login_shows_error(page: Page, username, password, expected_error):
-    page.goto(BASE_URL)
-    page.get_by_placeholder("Username").fill(username)
-    page.get_by_placeholder("Password").fill(password)
-    page.get_by_role("button", name="Login").click()
+    login_page = LoginPage(page)
 
-    error = page.locator("[data-test='error']")
-    expect(error).to_be_visible()
-    expect(error).to_contain_text(expected_error)
+    login_page.open()
+    login_page.login(username, password)
+
+    login_page.expect_error(expected_error)
