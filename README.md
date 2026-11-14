@@ -26,9 +26,10 @@ Built fro scratch as part of a structured learning path toward a QA automation c
 -'data' - test data
 
 ##Progress
--[x] Project setup and Git
--[] First UI test
--[] Page Object Model 
+-[x] Project setup and Git workflow
+-[x] Login UI test (valid and invalid, data-driven with parametrize)
+-[x] Page Object Model (LoginPage, InventoryPage)
+-[x] Shared fixtures in conftest.py
 -[] API tests
 -[] CI with GitHub Actions
 
